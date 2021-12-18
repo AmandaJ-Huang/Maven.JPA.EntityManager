@@ -1,57 +1,44 @@
 package services;
 
 import entities.Author;
-import entities.AuthorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AuthorService {
-    private AuthorRepository authorRepo;
+public class AuthorService implements Services<Author> {
 
-    @PersistenceContext
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("authors");
-    private EntityManager em = emf.createEntityManager();
-
-    @Autowired
-    public AuthorService(AuthorRepository authorRepo) {
-        this.authorRepo = authorRepo;
+    public void create(Author author) {
+        em.getTransaction().begin();
+        em.persist(author);
+        em.getTransaction().commit();
     }
 
-    public Author create(Author author) {
-        return authorRepo.save(author);
-    }
-
-    public Author readByID(Long id) {
-        return authorRepo.findById(id).get();
+    public Author readById(Long id) {
+        return em.find(Author.class, id);
     }
 
     public List<Author> readAll() {
-        Iterable<Author> allAuthors = authorRepo.findAll();
-        List<Author> authorList = new ArrayList<>();
-        allAuthors.forEach(authorList::add);
-        return authorList;
+        return em.createQuery("SELECT * FROM author", Author.class)
+                .getResultList();
     }
 
-    public Author update(Long id, Author newAuthorData) {
-        Author authorInDatabase = this.readByID(id);
+    public void update(Long id, Author newAuthorData) {
+        Author authorInDatabase = em.find(Author.class, id);
+
+        em.getTransaction().begin();
         authorInDatabase.setFirst_Name(newAuthorData.getFirst_Name());
         authorInDatabase.setLast_Name(newAuthorData.getLast_Name());
         authorInDatabase.setPublications(newAuthorData.getPublications());
-        authorInDatabase = authorRepo.save(authorInDatabase);
-        return authorInDatabase;
+        em.getTransaction().commit();
+
     }
 
-    public Author deleteById(Long id) {
-        Author authorToBeDeleted = this.readByID(id);
-        authorRepo.delete(authorToBeDeleted);
-        return authorToBeDeleted;
+    public void deleteById(Long id) {
+        em.getTransaction().begin();
+        Author author = em.find(Author.class, id);
+        em.remove(author);
+        em.getTransaction().commit();
+        System.out.println(author.toString() + " has been removed.");
     }
 }
