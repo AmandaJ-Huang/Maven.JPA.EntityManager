@@ -1,9 +1,6 @@
 package entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "book")
@@ -15,7 +12,10 @@ public class Book {
 
         private String title;
         private String genre;
-        private String author;
+
+        @OneToOne
+        private Author author;
+
         private Integer year;
         private Integer price;
         private String isbn;
@@ -23,7 +23,7 @@ public class Book {
         public Book() {
         }
 
-        public Book(String title, String genre, String author,
+        public Book(String title, String genre, Author author,
                 Integer year, Integer price, String isbn) {
         this.title = title;
         this.genre = genre;
@@ -33,7 +33,7 @@ public class Book {
         this.isbn = isbn;
         }
 
-        public Book(Long id, String title, String genre, String author,
+        public Book(Long id, String title, String genre, Author author,
                     Integer year, Integer price, String isbn) {
             this.id = id;
             this.title = title;
@@ -68,11 +68,11 @@ public class Book {
             this.genre = genre;
         }
 
-        public String getAuthor() {
+        public Author getAuthor() {
             return author;
         }
 
-        public void setAuthor(String author) {
+        public void setAuthor(Author author) {
             this.author = author;
         }
 

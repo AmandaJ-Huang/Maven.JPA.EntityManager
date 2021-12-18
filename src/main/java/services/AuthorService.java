@@ -29,7 +29,6 @@ public class AuthorService implements Services<Author> {
         em.getTransaction().begin();
         authorInDatabase.setFirst_Name(newAuthorData.getFirst_Name());
         authorInDatabase.setLast_Name(newAuthorData.getLast_Name());
-        authorInDatabase.setPublications(newAuthorData.getPublications());
         em.getTransaction().commit();
 
     }

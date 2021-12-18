@@ -1,6 +1,8 @@
 package entities;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "author")
@@ -10,25 +12,24 @@ public class Author {
     @GeneratedValue
     private Long id;
 
-    @OneToMany
     private String first_name;
     private String last_name;
-    private Integer publications;
+
+    @OneToMany
+    private Set<Book> books = new HashSet<>();
 
     public Author() {
     }
 
-    public Author(String first_name, String last_name, Integer publications) {
+    public Author(String first_name, String last_name) {
         this.first_name = first_name;
         this.last_name = last_name;
-        this.publications = publications;
     }
 
-    public Author(Long id, String first_name, String last_name, Integer publications) {
+    public Author(Long id, String first_name, String last_name) {
         this.id = id;
         this.first_name = first_name;
         this.last_name = last_name;
-        this.publications = publications;
     }
 
     public Long getId() {
@@ -55,13 +56,6 @@ public class Author {
         this.last_name = last_name;
     }
 
-    public Integer getPublications() {
-        return publications;
-    }
-
-    public void setPublications(Integer publications) {
-        this.publications = publications;
-    }
 
     @Override
     public String toString() {
@@ -69,7 +63,6 @@ public class Author {
                 "id=" + id +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
-                ", publications=" + publications +
                 '}';
     }
 }
