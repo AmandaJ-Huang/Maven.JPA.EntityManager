@@ -15,7 +15,7 @@ public class Author {
     private String first_name;
     private String last_name;
 
-    @OneToMany
+    @OneToMany (mappedBy = "id")
     private Set<Book> books = new HashSet<>();
 
     public Author() {

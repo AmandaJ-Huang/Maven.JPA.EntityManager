@@ -3,10 +3,19 @@ package services;
 import entities.Book;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Service
-public class BookService implements Services<Book> {
+public class BookService {
+
+    @PersistenceUnit
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("my-persistence-unit");
+    @PersistenceContext
+    EntityManager em = emf.createEntityManager();
 
     public void create(Book book) {
         em.getTransaction().begin();
@@ -14,16 +23,21 @@ public class BookService implements Services<Book> {
         em.getTransaction().commit();
     }
 
-    public Book readById(Long id) {
+    public Book readById(Integer id) {
         return em.find(Book.class, id);
     }
 
     public List<Book> readAll() {
-        return em.createQuery("SELECT * FROM book", Book.class)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Book> cr = cb.createQuery(Book.class);
+        Root<Book> root = cr.from(Book.class);
+        CriteriaQuery<Book> selectAll = cr.select(root);
+        TypedQuery<Book> selectAllQuery = em.createQuery(selectAll);
+
+        return selectAllQuery.getResultList();
     }
 
-    public void update(Long id, Book newBookData) {
+    public void update(Integer id, Book newBookData) {
         Book bookInDatabase = em.find(Book.class, id);
 
         em.getTransaction().begin();
@@ -37,7 +51,7 @@ public class BookService implements Services<Book> {
         em.getTransaction().commit();
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         em.getTransaction().begin();
         Book book = em.find(Book.class, id);
         em.remove(book);

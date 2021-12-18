@@ -1,15 +1,13 @@
 package services;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
+import javax.persistence.*;
 import java.util.List;
 
 public interface Services<T> {
 
+    @PersistenceUnit
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("my-persistence-unit");
     @PersistenceContext
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("myEntityMgr");
     EntityManager em = emf.createEntityManager();
 
     void create(T data);

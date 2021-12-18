@@ -3,17 +3,17 @@ package entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "book")
+@Table(name = "book", schema = "novels")
 public class Book {
 
         @Id
-        @GeneratedValue
-        private Long id;
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private Integer id;
 
         private String title;
         private String genre;
 
-        @OneToOne
+        @OneToOne(cascade = {CascadeType.ALL})
         private Author author;
 
         private Integer year;
@@ -33,7 +33,7 @@ public class Book {
         this.isbn = isbn;
         }
 
-        public Book(Long id, String title, String genre, Author author,
+        public Book(Integer id, String title, String genre, Author author,
                     Integer year, Integer price, String isbn) {
             this.id = id;
             this.title = title;
@@ -44,11 +44,11 @@ public class Book {
             this.isbn = isbn;
         }
 
-        public Long getId() {
+        public Integer getId() {
             return id;
         }
 
-        public void setId(Long id) {
+        public void setId(Integer id) {
             this.id = id;
         }
 
