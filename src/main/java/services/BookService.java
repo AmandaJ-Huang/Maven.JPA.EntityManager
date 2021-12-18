@@ -6,6 +6,10 @@ import entities.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +17,15 @@ import java.util.List;
 public class BookService {
     private BookRepository bookRepo;
 
+    @PersistenceContext
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("books");
+    private EntityManager em = emf.createEntityManager();
+
     @Autowired
     public BookService(BookRepository bookRepo) {
         this.bookRepo = bookRepo;
     }
+
 
     public Book create(Book book) {
         return bookRepo.save(book);

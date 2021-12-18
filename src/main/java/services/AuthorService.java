@@ -5,12 +5,20 @@ import entities.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class AuthorService {
     private AuthorRepository authorRepo;
+
+    @PersistenceContext
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("authors");
+    private EntityManager em = emf.createEntityManager();
 
     @Autowired
     public AuthorService(AuthorRepository authorRepo) {
